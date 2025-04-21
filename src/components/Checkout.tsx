@@ -25,8 +25,9 @@ export function Checkout({ userId, imageId }: { userId: string; imageId?: string
       const data = await res.json();
       if (!res.ok || !data.url) throw new Error(data.error || "Checkout failed");
       window.location.href = data.url;
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Unknown error");
     }
     setLoading(false);
   };

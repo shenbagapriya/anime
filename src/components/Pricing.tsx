@@ -30,7 +30,7 @@ export function Pricing() {
       <div className="max-w-5xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-10">Pricing</h2>
         <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan, idx) => (
+          {plans.map((plan) => (
             <div
               key={plan.name}
               className={`rounded-2xl border p-8 flex flex-col items-center ${plan.highlight ? "bg-primary text-white border-primary shadow-lg scale-105" : "bg-white"}`}

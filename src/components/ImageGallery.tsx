@@ -16,7 +16,6 @@ export function ImageGallery() {
   const { user } = useUser();
   const [images, setImages] = useState<ImageRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'in_progress' | 'complete'>('all');
 
   useEffect(() => {
@@ -28,15 +27,13 @@ export function ImageGallery() {
         setImages(data.images || []);
         setLoading(false);
       })
-      .catch((err) => {
-        setError("Failed to load images");
+      .catch(() => {
         setLoading(false);
       });
   }, [user]);
 
   if (!user) return null;
   if (loading) return <p className="text-center mt-8">Loading images...</p>;
-  if (error) return <p className="text-center text-red-500 mt-8">{error}</p>;
   if (images.length === 0) return <p className="text-center mt-8">No images uploaded yet.</p>;
 
   // Filtering
@@ -57,6 +54,7 @@ export function ImageGallery() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
         {filteredImages.map((img) => (
           <div key={img.id} className="border rounded-lg p-4 flex flex-col items-center bg-white shadow">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME || 'animeart'}.s3.${process.env.NEXT_PUBLIC_AWS_REGION || 'ap-south-1'}.amazonaws.com/${img.s3_key}`}
               alt={img.name}

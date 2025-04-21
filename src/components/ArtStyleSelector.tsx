@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 const STYLES = [
   {
@@ -39,8 +38,9 @@ export function ArtStyleSelector({ imageId, onStyleSelected }: { imageId: string
       });
       if (!res.ok) throw new Error("Failed to save style");
       if (onStyleSelected) onStyleSelected(style);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Unknown error");
     }
     setSaving(false);
   };
@@ -54,6 +54,7 @@ export function ArtStyleSelector({ imageId, onStyleSelected }: { imageId: string
           onClick={() => handleSelect(s.value)}
         >
           <CardContent className="flex flex-col items-center p-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={s.image} alt={s.name} className="w-32 h-32 object-cover rounded mb-2" />
             <span className="font-semibold text-lg mb-2">{s.name}</span>
             {selected === s.value && <span className="text-blue-600 font-bold">Selected</span>}

@@ -2,7 +2,6 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
-import { useUser } from "@clerk/nextjs";
 
 interface UploadResponse {
   uploadUrl: string;
@@ -10,11 +9,10 @@ interface UploadResponse {
 }
 
 export function UploadImage({ onUploaded }: { onUploaded?: (imageId: string) => void }) {
-  const { user } = useUser();
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [uploadedImageId, setUploadedImageId] = useState<string | null>(null);
+  // const [uploadedImageId, setUploadedImageId] = useState<string | null>(null); // not used
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     setError(null);
@@ -39,17 +37,18 @@ export function UploadImage({ onUploaded }: { onUploaded?: (imageId: string) => 
         headers: { "Content-Type": file.type },
       });
       if (!uploadRes.ok) throw new Error("Failed to upload to S3");
-      setUploadedImageId(imageId);
+      // setUploadedImageId(imageId);
       if (onUploaded) onUploaded(imageId);
       // Optionally: notify backend of completion
       // await fetch(`/api/mark-uploaded?id=${imageId}`);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Unknown error");
     }
     setUploading(false);
   }, [onUploaded]);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: { "image/jpeg": [".jpeg", ".jpg"], "image/png": [".png"] },
     maxFiles: 1,

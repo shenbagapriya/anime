@@ -3,3 +3,4 @@
 Marks the image as "paid" in Supabase.
 Immediately triggers the /api/process-image endpoint for that image.
 * Ensure RLS (Row-Level Security) is enabled to restrict image access to owner only.
+* https://replicate.com/account/vercel-integration
