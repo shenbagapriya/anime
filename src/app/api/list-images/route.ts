@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   if (!userId) return NextResponse.json({ images: [] });
   const { data, error } = await supabase
     .from("images")
-    .select("id, name, s3_key, style, status, created_at")
+    .select("id, name, s3_key, style, status, created_at, result_url")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
   if (error) return NextResponse.json({ images: [], error: error.message }, { status: 500 });
