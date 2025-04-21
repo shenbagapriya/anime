@@ -2,9 +2,19 @@
 import { useUser, SignedIn, SignedOut, RedirectToSignIn, UserButton } from "@clerk/nextjs";
 import { UploadImage } from "@/components/UploadImage";
 import { ImageGallery } from "@/components/ImageGallery";
+import { ArtStyleSelector } from "@/components/ArtStyleSelector";
+import { useState } from 'react';
 
 export default function DashboardPage() {
   const { user } = useUser();
+  const [showStyleSelector, setShowStyleSelector] = useState(false);
+  const [lastImageId, setLastImageId] = useState<string | null>(null);
+
+  const handleUploaded = (imageId: string) => {
+    setLastImageId(imageId);
+    setShowStyleSelector(true);
+  };
+
   return (
     <>
       <SignedIn>
@@ -15,7 +25,13 @@ export default function DashboardPage() {
         <div className="flex flex-col items-center justify-center min-h-screen">
           <h1 className="text-3xl font-bold mb-4">Welcome, {user?.firstName || user?.username || "User"}!</h1>
           <p className="text-lg">This is your dashboard.</p>
-          <UploadImage />
+          <UploadImage onUploaded={handleUploaded} />
+          {showStyleSelector && lastImageId && (
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold mb-2">Choose an art style for your image:</h2>
+              <ArtStyleSelector imageId={lastImageId} onStyleSelected={() => setShowStyleSelector(false)} />
+            </div>
+          )}
         </div>
         <div className="flex flex-col items-center justify-center min-h-screen mt-8">
           <ImageGallery />

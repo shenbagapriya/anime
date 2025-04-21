@@ -9,11 +9,12 @@ interface UploadResponse {
   imageId: string;
 }
 
-export function UploadImage() {
+export function UploadImage({ onUploaded }: { onUploaded?: (imageId: string) => void }) {
   const { user } = useUser();
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadedImageId, setUploadedImageId] = useState<string | null>(null);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     setError(null);
@@ -38,13 +39,15 @@ export function UploadImage() {
         headers: { "Content-Type": file.type },
       });
       if (!uploadRes.ok) throw new Error("Failed to upload to S3");
+      setUploadedImageId(imageId);
+      if (onUploaded) onUploaded(imageId);
       // Optionally: notify backend of completion
       // await fetch(`/api/mark-uploaded?id=${imageId}`);
     } catch (err: any) {
       setError(err.message);
     }
     setUploading(false);
-  }, []);
+  }, [onUploaded]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
