@@ -62,3 +62,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
     }
   ]
 }
+
+# Shadcn UI
+npx shadcn@latest add card
+
+after upload, nothing happens. make changes to choose style an art style
