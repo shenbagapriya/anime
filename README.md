@@ -38,6 +38,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## AWS
 
+### CORS Configuration
 [
   {
     "AllowedHeaders": ["*"],
@@ -47,3 +48,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
     "MaxAgeSeconds": 3000
   }
 ]
+
+### Bucket Policy
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowPublicRead",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::animeart/*"
+    }
+  ]
+}
